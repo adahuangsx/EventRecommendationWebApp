@@ -10,5 +10,12 @@ public class MySQLDBUtil {
 			+ HOSTNAME + ":" + PORT_NUM + "/" + DB_NAME
 			+ "?user=" + USERNAME + "&password=" + PASSWORD
 			+ "&autoReconnect=true&serverTimezone=UTC";
-	// jdbc: mysql://localhost:
+	// jdbc: mysql://localhost:...
+	/*
+	 * static {
+		...
+	   }
+	 * Once this class is used, this static initializer will be run.
+	 * Used when the initialization is too long.
+	 */
 }

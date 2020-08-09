@@ -1,6 +1,5 @@
 package db.mysql;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -21,10 +20,7 @@ public class MySQLTableCreation {
 				 * e.g. pass the args[0] in here
 				 */
 				
-				/*
-				 * static { ... }
-				 * Once this class is used, this static initializer will be run.
-				 */
+				
 				conn = DriverManager.getConnection(MySQLDBUtil.URL);
 			}catch(SQLException e) {
 				e.printStackTrace();
@@ -77,7 +73,14 @@ public class MySQLTableCreation {
 					+ "FOREIGN KEY (item_id) REFERENCES items(item_id),"
 					+ "FOREIGN KEY (user_id) REFERENCES users(user_id))";
 			stmt.executeUpdate(sql);
+			
+			System.out.println("Create tables successfully!");
 
+			// Step 4: insert data
+			sql = "INSERT INTO users VALUES ("
+					+ "'1111', '3229c1097c00d497a0fd282d586be050', 'John', 'Smith')";
+			System.out.println("Executing query: " + sql);
+			stmt.executeUpdate(sql);
 
 			
 		} catch (Exception e) {
