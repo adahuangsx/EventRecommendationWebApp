@@ -42,37 +42,35 @@ public class MySQLConnection implements DBConnection {
 	@Override
 	public void setFavoriteItems(String userId, List<String> itemIds) {
 		// TODO Auto-generated method stub
-		if (conn != null) {
+		if (conn == null) {
 			return;
 		}
 		try {
 			String sql = "INSERT IGNORE INTO history (user_id, item_id) VALUES(?, ?)";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			for (String itemId : itemIds) {
-				stmt.setString(0, userId);
-				stmt.setString(1, itemId);
+				stmt.setString(1, userId);
+				stmt.setString(2, itemId); // from 1 !!!
 				stmt.execute();
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
 	}
 
 	@Override
 	public void unsetFavoriteItems(String userId, List<String> itemIds) {
 		// TODO Auto-generated method stub
-		if (conn != null) {
+		if (conn == null) {
 			return;
 		}
 		try {
 			String sql = "DELETE FROM history WHERE user_id = ? and item_id = ?";
 			PreparedStatement stmt = conn.prepareStatement(sql);
 			for (String itemId : itemIds) {
-				stmt.setString(0, userId);
-				stmt.setString(1, itemId);
+				stmt.setString(1, userId);
+				stmt.setString(2, itemId);
 				stmt.execute();
 			}
 		} catch (SQLException e) {
