@@ -46,10 +46,12 @@ public class SearchItem extends HttpServlet {
 			double lat = Double.parseDouble(request.getParameter("lat"));
 			double lon = Double.parseDouble(request.getParameter("lon"));
 			String keyword = request.getParameter("term");
+			
 //			List<Item> searchResults = TicketMasterAPI.search(lat, lon, keyword);
 			DBConnection connection = DBConnectionFactory.getConnection();
 			List<Item> searchResults = connection.searchItems(lat, lon, keyword);
 			connection.close();
+			
 			for (Item searchResult : searchResults) {
 				array.put(searchResult.toJSONObject());
 			}

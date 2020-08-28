@@ -3,12 +3,15 @@ package db.mysql;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import db.DBConnection;
 import entity.Item;
+import entity.Item.ItemBuilder;
 import external.TicketMasterAPI;
 
 public class MySQLConnection implements DBConnection {
@@ -86,8 +89,38 @@ public class MySQLConnection implements DBConnection {
 
 	@Override
 	public Set<Item> getFavoriteItems(String userId) {
-		// TODO Auto-generated method stub
-		return null;
+		if (conn == null) {
+			return new HashSet<>();
+		}
+		Set<Item> favoriteItems = new HashSet<>();
+		Set<String> favoriteItemIds = getFavoriteItemIds(userId);
+		
+		try {
+			String sql = "SELECT * FROM items WHERE item_id = ?";
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			for (String itemId : favoriteItemIds) {
+				stmt.setString(1, itemId);
+				ResultSet rs = stmt.executeQuery();
+				
+				ItemBuilder builder = new ItemBuilder();
+				while (rs.next()) { // Initial resultSet is from -1
+					builder.setItemId(rs.getString("item_id"));
+					builder.setName(rs.getString("name"));
+					builder.setAddress(rs.getString("address"));
+					builder.setImageUrl(rs.getString("image_url"));
+					builder.setUrl(rs.getString("url"));
+					builder.setCategories(getCategories(itemId));
+					builder.setDistance(rs.getDouble("distance"));
+					builder.setRating(rs.getDouble("rating"));
+					
+					favoriteItems.add(builder.build());
+				}
+			}
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return favoriteItems;
 	}
 
 	@Override
