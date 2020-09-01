@@ -49,7 +49,7 @@ public class RecommendItem extends HttpServlet {
 			for (Item item : recommendedItems) {
 				result.put(item.toJSONObject());
 			}
-		} catch (JSONException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
