@@ -3,6 +3,7 @@ package rpc;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,6 +44,7 @@ public class SearchItem extends HttpServlet {
 		// write a Json array to response
 		JSONArray array = new JSONArray();
 		try {
+			String userId = request.getParameter("user_id");
 			double lat = Double.parseDouble(request.getParameter("lat"));
 			double lon = Double.parseDouble(request.getParameter("lon"));
 			String keyword = request.getParameter("term");
@@ -50,10 +52,14 @@ public class SearchItem extends HttpServlet {
 //			List<Item> searchResults = TicketMasterAPI.search(lat, lon, keyword);
 			DBConnection connection = DBConnectionFactory.getConnection();
 			List<Item> searchResults = connection.searchItems(lat, lon, keyword);
+			
+			Set<String> favorite = connection.getFavoriteItemIds(userId);
 			connection.close();
 			
 			for (Item searchResult : searchResults) {
-				array.put(searchResult.toJSONObject());
+				JSONObject obj = searchResult.toJSONObject();
+				obj.put("favorite", favorite.contains(searchResult.getItemId()));
+				array.put(obj);
 			}
 			
 		} catch (Exception e) {
